@@ -30,9 +30,9 @@ CreamEngine::CreamEngine()
         this->background_color.b = b; });
 
     // Sets the background texture
-    this->lua.set_function("SetBackground", [&](const std::string &texture_name)
+    this->lua.set_function("SetBackground", [&](std::shared_ptr<Texture2D> texture)
                            {
-        this->background_texture = this->texture_map.at(texture_name);
+        this->background_texture = texture;
         this->background_texture_set = true; });
 
     // Renders a sprite at position X, Y, and size W, H

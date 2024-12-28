@@ -26,5 +26,4 @@ private:
     Color background_color;
     std::shared_ptr<Texture2D> background_texture;
     std::list<Sprite> sprite_queue; // To be rendered
-    std::unordered_map<std::string, std::shared_ptr<Texture2D>> texture_map;
 };
