@@ -1,5 +1,4 @@
 #include "cream_engine.hpp"
-#include "Player.hpp"
 
 CreamEngine::CreamEngine()
 {
@@ -29,6 +28,7 @@ CreamEngine::CreamEngine()
         player->texture = texture;
         player->x = x;
         player->y = y;
+        this->player = player;
         return player; });
 
     // Load texture as Lua variable
@@ -72,6 +72,11 @@ void CreamEngine::Run()
     while (!WindowShouldClose())
     {
         // Update
+        if (this->player != nullptr)
+        {
+            player->Update();
+            std::cout << player->x << '\n';
+        }
 
         // Render
         BeginDrawing();
@@ -85,6 +90,11 @@ void CreamEngine::Run()
             for (const auto &sprite : this->sprite_queue)
             {
                 DrawTexturePro(*sprite.tex, {0.0f, 0.0f, (float)sprite.tex->width, (float)sprite.tex->height}, {(float)sprite.x, (float)sprite.y, (float)sprite.w, (float)sprite.h}, {0.0f, 0.0f}, 0.0f, WHITE);
+            }
+
+            if (this->player != nullptr)
+            {
+                DrawTexturePro(*player->texture, {0.0f, 0.0f, (float)player->texture->width, (float)player->texture->height}, {(float)player->x, (float)player->y, (float)player->texture->width, (float)player->texture->height}, {0.0f, 0.0f}, 0.0f, WHITE);
             }
 
             if (this->show_fps)

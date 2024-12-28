@@ -3,6 +3,7 @@
 #include "raylib.h"
 #include "unordered_map"
 #include <list>
+#include "Player.hpp"
 
 struct Sprite
 {
@@ -24,6 +25,7 @@ private:
     bool background_texture_set;
     bool show_fps;
     Color background_color;
+    std::shared_ptr<Player> player;
     std::shared_ptr<Texture2D> background_texture;
     std::list<Sprite> sprite_queue; // To be rendered
 };
