@@ -2,6 +2,13 @@
 #include "sol/sol.hpp"
 #include "raylib.h"
 #include "unordered_map"
+#include <list>
+
+struct Sprite
+{
+    std::shared_ptr<Texture2D> tex;
+    int32_t x, y, w, h;
+};
 
 class CreamEngine
 {
@@ -15,7 +22,9 @@ private:
 
     // Game variables
     bool background_texture_set;
+    bool show_fps;
     Color background_color;
-    Texture2D background_texture;
-    std::unordered_map<std::string, Texture2D> texture_map;
+    std::shared_ptr<Texture2D> background_texture;
+    std::list<Sprite> sprite_queue; // To be rendered
+    std::unordered_map<std::string, std::shared_ptr<Texture2D>> texture_map;
 };
