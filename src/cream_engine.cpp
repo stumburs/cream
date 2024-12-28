@@ -16,7 +16,7 @@ CreamEngine::CreamEngine()
 
     // Experimental
     // Save texture as variable in Lua
-    this->lua.new_usertype<Texture2D>("Texture", "width", &Texture2D::width, "height", &Texture2D::height, "mipmaps", &Texture2D::mipmaps, "format", &Texture2D::format);
+    this->lua.new_usertype<Texture2D>("Texture2D", "width", &Texture2D::width, "height", &Texture2D::height, "mipmaps", &Texture2D::mipmaps, "format", &Texture2D::format);
 
     // Load texture as Lua variable
     this->lua.set_function("LoadTexture", [&](const std::string &texture_path) -> std::shared_ptr<Texture2D>
@@ -28,12 +28,6 @@ CreamEngine::CreamEngine()
         this->background_color.r = r;
         this->background_color.g = g;
         this->background_color.b = b; });
-
-    // Loads a texture into a map
-    // this->lua.set_function("LoadTexture", [&](const std::string &texture_name, const std::string &texture_path)
-    //                        {
-    //     auto texture = std::make_shared<Texture2D>(LoadTexture(texture_path.c_str()));
-    //     this->texture_map[texture_name] = texture; });
 
     // Sets the background texture
     this->lua.set_function("SetBackground", [&](const std::string &texture_name)
