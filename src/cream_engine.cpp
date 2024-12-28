@@ -14,25 +14,36 @@ CreamEngine::CreamEngine()
     this->lua.set_function("Print", [&](const std::string &text)
                            { std::cout << text << std::endl; });
 
+    // Experimental
+    // Save texture as variable in Lua
+    this->lua.new_usertype<Texture2D>("Texture", "width", &Texture2D::width, "height", &Texture2D::height, "mipmaps", &Texture2D::mipmaps, "format", &Texture2D::format);
+
+    // Load texture as Lua variable
+    this->lua.set_function("LoadTexture", [&](const std::string &texture_path) -> std::shared_ptr<Texture2D>
+                           { auto texture = std::make_shared<Texture2D>(LoadTexture(texture_path.c_str())); return texture; });
+
     // Sets the background color
     this->lua.set_function("SetBackgroundColor", [&](const uint8_t r, const uint8_t g, const uint8_t b)
-                           { this->background_color.r = r; this->background_color.g = g; this->background_color.b = b; });
+                           {
+        this->background_color.r = r;
+        this->background_color.g = g;
+        this->background_color.b = b; });
 
     // Loads a texture into a map
-    this->lua.set_function("LoadTexture", [&](const std::string &texture_name, const std::string &texture_path)
-                           { 
-                                auto texture = std::make_shared<Texture2D>(LoadTexture(texture_path.c_str()));
-                                this->texture_map[texture_name] = texture; });
+    // this->lua.set_function("LoadTexture", [&](const std::string &texture_name, const std::string &texture_path)
+    //                        {
+    //     auto texture = std::make_shared<Texture2D>(LoadTexture(texture_path.c_str()));
+    //     this->texture_map[texture_name] = texture; });
 
     // Sets the background texture
     this->lua.set_function("SetBackground", [&](const std::string &texture_name)
-                           { 
-                                this->background_texture = this->texture_map.at(texture_name);
-                                this->background_texture_set = true; });
+                           {
+        this->background_texture = this->texture_map.at(texture_name);
+        this->background_texture_set = true; });
 
     // Renders a sprite at position X, Y, and size W, H
-    this->lua.set_function("DrawSprite", [&](const std::string &texture_name, int32_t X, int32_t Y, int32_t W, int32_t H)
-                           { this->sprite_queue.emplace_back(Sprite{this->texture_map.at(texture_name), X, Y, W, H}); });
+    this->lua.set_function("DrawSprite", [&](std::shared_ptr<Texture2D> texture, int32_t X, int32_t Y, int32_t W, int32_t H)
+                           { this->sprite_queue.emplace_back(Sprite{texture, X, Y, W, H}); });
 
     // Displays FPS at the top left
     this->lua.set_function("ShowFPS", [&](void)
