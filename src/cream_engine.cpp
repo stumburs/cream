@@ -1,4 +1,5 @@
 #include "cream_engine.hpp"
+#include "Player.hpp"
 
 CreamEngine::CreamEngine()
 {
@@ -17,6 +18,18 @@ CreamEngine::CreamEngine()
     // Experimental
     // Save texture as variable in Lua
     this->lua.new_usertype<Texture2D>("Texture2D", "width", &Texture2D::width, "height", &Texture2D::height, "mipmaps", &Texture2D::mipmaps, "format", &Texture2D::format);
+
+    // Player variable
+    this->lua.new_usertype<Player>("Player", "x", &Player::x, "y", &Player::y, "texture", &Player::texture);
+
+    // Create a player
+    this->lua.set_function("CreatePlayer", [&](const std::shared_ptr<Texture2D> texture, float_t x, float_t y) -> std::shared_ptr<Player>
+                           {
+        auto player = std::make_shared<Player>();
+        player->texture = texture;
+        player->x = x;
+        player->y = y;
+        return player; });
 
     // Load texture as Lua variable
     this->lua.set_function("LoadTexture", [&](const std::string &texture_path) -> std::shared_ptr<Texture2D>
